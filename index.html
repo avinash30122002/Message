@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.0/brython_stdlib.js"></script>
+  </head>
+  <body onload="brython()">
+    <script type="text/python">
+    import hashlib
+    import pickle
+    class mail():
+	    def lgn(maildict):
+		    i = 0
+		    while i == 0:
+		  	  global usn
+		  	  usn = input("""Write your user name. Type 'create' to create new account""")
+  			  while i == 0:
+	  			  if usn in maildict:
+		  			  a=maildict.get(usn)
+			  		  b = input("Type your password:")
+				  	  pwd = hashlib.md5(b.encode())
+					    pwd = pwd.hexdigest()
+					    if a == pwd:
+						    print("Login Succesful")
+  						  i = i+1
+	  					  return('lgn')
+		  			  elif b != 'back':
+			  			  print("Try again or type 'back' .")
+				  	  else:
+					  	  break
+  				  elif usn == 'create':
+	  				  i = i+1
+	  				  return usn
+	  			  else:
+	  				  print("Username not found. Try again or create new account")
+	  				  break
+	   def ca(maildict):
+	  	  i = 0
+	  	  while i == 0:
+	  		  usn = input("Write a new username:")
+	  		  if usn in maildict:
+	  			  print("Username already exists. Try again !")
+	  		  else:
+	  			  i = i+1
+	  	  pwd = input("Select a password:")
+	  	  pwd = hashlib.md5(pwd.encode())
+	  	  pwd = pwd.hexdigest()
+	  	  maildict[usn] = pwd
+	  	  print("Account Created")
+	  	  return maildict
+	   def da(maildict):
+	  	  del maildict[usn]
+	  	  dict_file = open("dict.pkl", "rb+")
+	  	  pickle.dump(maildict,dict_file)
+	  	  dict_file.close()
+	  	  print('Account Deleted')
+	   def menu():
+	  	  print("Home:")
+	  	  print("1. Send")
+	  	  print("2. Check")
+	  	  print("3. Log out")
+	  	  print("4. Delete account")
+	  	  opt = input("Choose any option:")
+	  	  return opt
+	   def send(mesdict):
+	  	  i = 0
+	  	  while i == 0:
+	  		  to = input("Send to:")
+  			  if to in maildict:
+  				  print("""Type your message:
+    From:- """,usn)
+  				  mes = input('')
+  				  mes = 'From'+' '+ usn +': '+mes
+  				  mesdict[to] = mes
+  				  mdict_file = open("mdict.pkl","wb+")
+  				  pickle.dump(mesdict,mdict_file)
+  				  print("Message Sent ✔✔")
+  				  mdict_file.close()
+  				  i = i+1
+  			  else:
+  				  print('Account not found')
+  	  def check(mesdict):
+  		  if usn in mesdict:
+  			  print(mesdict.get(usn))
+  		  else:
+  			  print('No messages.')
+  	  def run(maildict):
+  		  i = 0
+  		  while i == 0:
+  			  a = mail.lgn(maildict)
+  			  if a == 'create':
+  				  maildict = mail.ca(maildict)
+  				  dict_file = open("dict.pkl", "wb")
+  				  pickle.dump(maildict,dict_file)
+  				  dict_file.close()
+  			  if a == 'lgn':
+  				  j = 0
+  				  while j ==0:
+  					  opt = mail.menu()
+  					  if opt == str(1):
+  					  	mail.send(mesdict)
+  				  	if opt == str(2):
+  					  	mail.check(mesdict)
+  				  	if opt == str(3):
+  				  		break
+  				  	if opt == str(4):
+  					  	mail.da(maildict)
+  					  	break
+  				  continue
+    try:
+      mdict_file = open("mdict.pkl","rb+")
+    except:
+      mdict_file = open("mdict.pkl","wb+")
+    try:
+      mesdict = pickle.load(mdict_file)
+    except:
+	    mesdict = {}
+	  mesdict['sample'] = 'sample'
+      pickle.dump(mesdict,mdict_file)
+    try:
+  	  dict_file = open("dict.pkl", "rb+")
+    except:
+  	  dict_file = open("dict.pkl","wb+")
+    try:
+  	  maildict = pickle.load(dict_file)
+    except:
+  	  maildict = {}
+  	  maildict['sample']='sample'
+  	  pickle.dump(maildict,dict_file)
+    print(maildict)
+    mail.run(maildict)
+    </script>
+    <input id="zone"><button id="mybutton">click !</button>
+  </body>
+</html>
